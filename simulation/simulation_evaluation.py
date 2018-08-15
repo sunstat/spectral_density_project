@@ -17,6 +17,7 @@ from spectral_density import *
 import matplotlib.pyplot as plt
 
 dashList = [(5,2),(2,5),(4,10),(3,3,2,2),(5,2,20,2)]
+p_values = [12,48,96]
 
 
 def plot_err_curve(ax, errs_sm_dict, errs_sh_dict, errs_th_dict,
@@ -110,11 +111,11 @@ def graphics_help(result, ax, p, relative=False):
                               true_spectral_norm, graphics=True)
 
 
-def graphics(result, gen_mode='ho', model_mode='ma', relative=False):
+def graphics(result, num_obs, gen_mode='ho', model_mode='ma', relative=False):
     fig, axes = plt.subplots(1, 3)
     ind = 0
     true=None; sm=None; sh=None; hard=None; so=None; al=None
-    for p in [12,48,96]:
+    for p in p_values:
         var_name = '_'.join([gen_mode, str(p)])
         if relative:
             sm, sh, hard, so, al = graphics_help(result[var_name], axes[ind], p, relative)
@@ -126,7 +127,7 @@ def graphics(result, gen_mode='ho', model_mode='ma', relative=False):
             ('sm', 'sh', 'hard', 'la', 'al'), loc=9, bbox_to_anchor=(0, -0.2))
 
     plt.tight_layout()
-    plt.savefig(os.path.join('result', model_mode+'_'+gen_mode+'_'+'error_curve.pdf'))
+    plt.savefig(os.path.join('result', model_mode+'_'+str(num_obs)+'_'+gen_mode+'_'+'error_curve.pdf'))
     plt.close('all')
 
 
@@ -140,13 +141,16 @@ def display_results(num_obs, model_mode):
     print(result_name)
     result = load_result(result_name)
     for gen_mode in ['ho', 'he']:
-        graphics(result, gen_mode, model_mode, relative=False)
+        graphics(result, num_obs, gen_mode,  model_mode, relative=False)
 
 
 
 if __name__ == "__main__":
+    display_results(num_obs=200, model_mode='ma')
+    display_results(num_obs = 200, model_mode = 'var')
     display_results(num_obs=400, model_mode='ma')
-    display_results(num_obs=800, model_mode='ma')
-    #dispaly_results(num_obs = 400, gen_mode = 'var')
-    #dispaly_results(num_obs=800, gen_mode='var')
+    display_results(num_obs=400, model_mode='var')
+    display_results(num_obs=600, model_mode='ma')
+    display_results(num_obs=600, model_mode='var')
+
 

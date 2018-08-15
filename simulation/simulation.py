@@ -21,7 +21,8 @@ def fetch_span(num_obs):
         return 24
     elif num_obs == 400:
         return 20
-
+    elif num_obs == 200:
+        return 15
 
 def extract_tuple1(errs_dict):
     ls = sorted(errs_dict.items())
@@ -29,22 +30,6 @@ def extract_tuple1(errs_dict):
     return freq_ind, values
 
 
-
-def test_left_right_norm(spec_est):
-    res_sm = {}
-    res_sh = {}
-    res_th = {}
-    for n in range(-399, 400, 1):
-        res_sm[n] = HS_norm(spec_est.query_smoothing_estimator(n))
-        res_sh[n] = HS_norm(spec_est.query_shrinkage_estimator(n))
-        res_th[n] = HS_norm(spec_est.query_thresholding_estimator(n))
-    #keys, values = extract_tuple1(res_sm)
-    #pyplot.plot(keys, values, 'ro', label='smoothed')
-    keys, values = extract_tuple1(res_th)
-    plt.plot(keys, values, 'y2', label='thresholding')
-    keys, values = extract_tuple1(res_sh)
-    plt.plot(keys, values, 'g+', label='shrinkage')
-    plt.show()
 
 
 
@@ -97,7 +82,7 @@ def append_relative_err(result):
 
 
 
-def simu_help(mode, num_obs, p, generating_mode):
+def simu_help(mode, num_obs, p, generating_mode, individual_level=True):
     assert generating_mode in ['ma', 'var']
     print("now doing simulation with setting p = {}, mode = {}".format(p, mode))
     print("================")
@@ -136,7 +121,7 @@ def simu_help(mode, num_obs, p, generating_mode):
             ts = generate_ma(weights, num_obs=num_obs, stdev=stdev)
         elif generating_mode == 'var':
             ts = generate_mvar(weights, num_obs=num_obs, stdev=stdev)
-        spec_est = SpecEst(ts, model_info)
+        spec_est = SpecEst(ts, model_info, individual_level=individual_level)
         #test_left_right_norm(spec_est)
         err_al_dict = spec_est.evaluate('al')
         err_th_dict = spec_est.evaluate('th')
@@ -186,13 +171,14 @@ def simu_setting_2_str(p, mode):
 
 
 
-def simu(num_obs, generating_mode, res_file_name = 'result'):
+def simu(num_obs, generating_mode, individual_level=True):
+    res_file_name = generating_mode+'_'+'result_'+str(num_obs)
     result = {}
-    for p in [12, 48, 96]:
+    for p in p_values:
         for mode in ['ho', 'he']:
             key_name = simu_setting_2_str(p, mode)
             print(key_name)
-            sub_res = simu_help(mode, num_obs = num_obs, p=p, generating_mode = generating_mode)
+            sub_res = simu_help(mode, num_obs = num_obs, p=p, generating_mode = generating_mode, individual_level=individual_level)
             result[key_name] = sub_res
     with open(os.path.join(RES_DIR, res_file_name), 'wb') as f:
         pickle.dump(result, f)
@@ -209,8 +195,6 @@ def load_result(result_file_name = 'result'):
 
 
 
-
-
 def extract_tuple(errs_dict):
     num_obs = len(errs_dict)
     ls = sorted(errs_dict.items())
@@ -221,12 +205,13 @@ def extract_tuple(errs_dict):
 
 
 
-
 if __name__ == "__main__":
     random.seed(1)
-    #simu(400, generating_mode='ma', res_file_name='ma_result_400')
-    simu(800, generating_mode='ma', res_file_name='ma_result_800')
-    #simu(400, generating_mode = 'var', res_file_name = 'var_result_400')
-    #simu(800, generating_mode='var', res_file_name='var_result_800')
+    simu(200, generating_mode='ma', individual_level=True)
+    simu(200, generating_mode='var', individual_level=True)
+    simu(400, generating_mode = 'ma', individual_level=True)
+    simu(400, generating_mode='var', individual_level=True)
+    simu(600, generating_mode='ma', individual_level=True)
+    simu(600, generating_mode='var', individual_level=True)
 
     #simu_ma_help(mode = 'ho', num_obs = 600, p=48, graphics=True)
