@@ -116,7 +116,7 @@ def simu_help(mode, num_obs, p, generating_mode, individual_level=True):
     true_spectral_norm_square = {}
 
 
-    for i in range(5):
+    for i in range(50):
         if generating_mode == 'ma':
             ts = generate_ma(weights, num_obs=num_obs, stdev=stdev)
         elif generating_mode == 'var':
