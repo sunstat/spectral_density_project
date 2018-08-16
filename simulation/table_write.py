@@ -139,6 +139,8 @@ def write_vma_rmise(file_handle, model_type='ho'):
     result_200 = load_result(result_file_name)
     result_file_name = 'ma_result_400'
     result_400 = load_result(result_file_name)
+    result_file_name = 'ma_result_600'
+    result_600 = load_result(result_file_name)
     file_handle.write('VMA & & & & &\\\\\n')
     for p in p_values:
         file_handle.write('p = {} & & & & &\\\\\n'.format(p))
@@ -154,6 +156,8 @@ def write_var_rmise(file_handle, model_type='ho'):
     result_200 = load_result(result_file_name)
     result_file_name = 'var_result_400'
     result_400 = load_result(result_file_name)
+    result_file_name = 'var_result_600'
+    result_600 = load_result(result_file_name)
     file_handle.write('VAR & & & & &\\\\\n')
     for p in p_values:
         file_handle.write('p = {} & & & & &\\\\\n'.format(p))
@@ -187,6 +191,10 @@ def extract_three_metric_array(result, model_type, p):
 def write_vma_three_metrics(file_handle, model_type='ho'):
     result_file_name = 'ma_result_200'
     result_200 = load_result(result_file_name)
+    result_file_name = 'ma_result_400'
+    result_400 = load_result(result_file_name)
+    result_file_name = 'ma_result_600'
+    result_600 = load_result(result_file_name)
     file_handle.write('VMA & precision & recall & F1 & precision & recall & F1 & precision & recall & F1\\\\\n')
     for p in p_values:
         file_handle.write(' p = {} & & & & & & & & & \\\\\n'.format(str(p)))
@@ -202,6 +210,8 @@ def write_vma_three_metrics(file_handle, model_type='ho'):
     result_200 = load_result(result_file_name)
     result_file_name = 'ma_result_400'
     result_400 = load_result(result_file_name)
+    result_file_name = 'ma_result_600'
+    result_600 = load_result(result_file_name)
     file_handle.write('VMA & precision & recall & F1 & precision & recall & F1 & precision & recall & F1\\\\\n')
     for p in p_values:
         file_handle.write(' p = {} & & & & & & & & & \\\\\n'.format(str(p)))
@@ -216,6 +226,8 @@ def write_var_three_metrics(file_handle, model_type='ho'):
     result_200 = load_result(result_file_name)
     result_file_name = 'var_result_400'
     result_400 = load_result(result_file_name)
+    result_file_name = 'var_result_600'
+    result_600 = load_result(result_file_name)
     file_handle.write('VAR & precision & recall & F1 & precision & recall & F1 & precision & recall & F1\\\\\n')
     for p in p_values:
         file_handle.write(' p = {} & & & & & & & & & \\\\\n'.format(str(p)))

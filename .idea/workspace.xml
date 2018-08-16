@@ -2,26 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="384acadd-980e-4cfd-bea3-4a55c80991bc" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/ma_he_error_curve.pdf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/ma_ho_error_curve.pdf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/ma_result_200" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/ma_result_400" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/ma_result_800" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/table/rmise_he_table" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/table/rmise_he_table.tex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/table/rmise_ho_table" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/table/rmise_ho_table.tex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/table/three_metric_he_table" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/table/three_metric_he_table.tex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/table/three_metric_ho_table" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/table/three_metric_ho_table.tex" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/var_he_error_curve.pdf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/var_ho_error_curve.pdf" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/var_result_400" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/simulation/result/var_result_800" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simulation/simulation.py" afterPath="$PROJECT_DIR$/simulation/simulation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simulation/table_write.py" afterPath="$PROJECT_DIR$/simulation/table_write.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,7 +13,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="simulation.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="simulation.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simulation/simulation.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-754">
@@ -44,11 +25,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="table_write.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="table_write.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/simulation/table_write.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3331">
-              <caret line="8" column="25" lean-forward="false" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
+            <state relative-caret-position="-242">
+              <caret line="213" column="12" lean-forward="false" selection-start-line="213" selection-start-column="12" selection-end-line="213" selection-end-column="12" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -130,9 +111,9 @@
         <option value="$PROJECT_DIR$/simulation/test_result.py" />
         <option value="$PROJECT_DIR$/simulation/result/table/rmise_ho_table" />
         <option value="$PROJECT_DIR$/simulation/three_metric_header_he" />
-        <option value="$PROJECT_DIR$/simulation/table_write.py" />
         <option value="$PROJECT_DIR$/simulation/simulation_evaluation.py" />
         <option value="$PROJECT_DIR$/simulation/simulation.py" />
+        <option value="$PROJECT_DIR$/simulation/table_write.py" />
       </list>
     </option>
   </component>
@@ -331,8 +312,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="943" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3295063" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -662,16 +644,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/simulation/table_write.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3331">
-          <caret line="8" column="25" lean-forward="false" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/simulation/simulation_evaluation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1222">
@@ -686,6 +658,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-754">
           <caret line="33" column="0" lean-forward="true" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/simulation/table_write.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-242">
+          <caret line="213" column="12" lean-forward="false" selection-start-line="213" selection-start-column="12" selection-end-line="213" selection-end-column="12" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
