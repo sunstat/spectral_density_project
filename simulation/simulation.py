@@ -32,8 +32,6 @@ def extract_tuple1(errs_dict):
 
 
 
-
-
 def append_help(ls1, ls2, ls3, v1, v2, v3):
     ls1.append(v1)
     ls2.append(v2)
