@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="384acadd-980e-4cfd-bea3-4a55c80991bc" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hupo.py" afterPath="$PROJECT_DIR$/hupo.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simulation/generate_weights.py" afterPath="$PROJECT_DIR$/simulation/generate_weights.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simulation/simulation.py" afterPath="$PROJECT_DIR$/simulation/simulation.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simulation/table_write.py" afterPath="$PROJECT_DIR$/simulation/table_write.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/simulation/three_metric_tail_ho" afterPath="$PROJECT_DIR$/simulation/three_metric_tail_ho" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,8 +16,8 @@
       <file leaf-file-name="simulation.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/simulation/simulation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3774">
-              <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+            <state relative-caret-position="380">
+              <caret line="268" column="0" lean-forward="true" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -751,8 +747,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/simulation/simulation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3774">
-          <caret line="39" column="0" lean-forward="true" selection-start-line="39" selection-start-column="0" selection-end-line="39" selection-end-column="0" />
+        <state relative-caret-position="380">
+          <caret line="268" column="0" lean-forward="true" selection-start-line="268" selection-start-column="0" selection-end-line="268" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>

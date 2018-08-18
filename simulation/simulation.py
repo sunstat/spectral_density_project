@@ -260,8 +260,9 @@ def main(series=False):
         #series_simu(600, generating_mode='ma', individual_level=True)
         #series_simu(600, generating_mode='var', individual_level=True)
     else:
-        p_simu = MyPool()
-        p_simu.starmap(parallel_simu, [[200,'ma'], [200,'var']])
+        #p_simu = MyPool()
+        #p_simu.starmap(parallel_simu, [[200,'ma'], [200,'var']])
+        parallel_simu(200, 'ma')
         #parallel_simu(200, 'ma', True)
 
 
