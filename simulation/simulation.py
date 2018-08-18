@@ -3,14 +3,39 @@ from spectral_density import *
 from generate_weights import *
 import pickle
 import random
+import time
+
 import matplotlib.pyplot as plt
 from datetime import datetime
 import sys
+from multiprocessing import Pool
+from multiprocessing import Process
+import multiprocessing
+import multiprocessing.pool
+from multiprocessing import Manager
+from itertools import chain
+from itertools import cycle
+
+
 RES_DIR = 'result'
 simu_log_file = 'simu_res.log'
 
 
 p_values = [12,48,96]
+
+
+class NoDaemonProcess(multiprocessing.Process):
+    # make 'daemon' attribute always return False
+    def _get_daemon(self):
+        return False
+    def _set_daemon(self, value):
+        pass
+    daemon = property(_get_daemon, _set_daemon)
+
+# We sub-class multiprocessing.pool.Pool instead of multiprocessing.Pool
+# because the latter is only a wrapper function, not a proper class.
+class MyPool(multiprocessing.pool.Pool):
+    Process = NoDaemonProcess
 
 
 
@@ -80,6 +105,11 @@ def append_relative_err(result):
 
 
 
+def simu_setting_2_str(p, generating_mode):
+    return str(generating_mode)+'_'+str(p)
+
+
+
 def simu_help(mode, num_obs, p, generating_mode, individual_level=True):
     assert generating_mode in ['ma', 'var']
     print("now doing simulation with setting p = {}, mode = {}".format(p, mode))
@@ -114,7 +144,7 @@ def simu_help(mode, num_obs, p, generating_mode, individual_level=True):
     true_spectral_norm_square = {}
 
 
-    for i in range(50):
+    for i in range(3):
         if generating_mode == 'ma':
             ts = generate_ma(weights, num_obs=num_obs, stdev=stdev)
         elif generating_mode == 'var':
@@ -132,13 +162,13 @@ def simu_help(mode, num_obs, p, generating_mode, individual_level=True):
         errs_dict_so.append(err_so_dict)
         errs_dict_sh.append(err_sh_dict)
         errs_dict_sm.append(err_sm_dict)
-        for mode in ['th', 'so', 'al']:
-            precision, recall, F1 = spec_est.query_recover_three_measures(mode)
-            if mode == 'th':
+        for mode_threshold in ['th', 'so', 'al']:
+            precision, recall, F1 = spec_est.query_recover_three_measures(mode_threshold)
+            if mode_threshold == 'th':
                 append_help(precision_th, recall_th, F1_th, precision, recall, F1)
-            elif mode == 'so':
+            elif mode_threshold == 'so':
                 append_help(precision_so, recall_so, F1_so, precision, recall, F1)
-            elif mode == 'al':
+            elif mode_threshold == 'al':
                 append_help(precision_al, recall_al, F1_al, precision, recall, F1)
 
         if i == 0:
@@ -159,29 +189,48 @@ def simu_help(mode, num_obs, p, generating_mode, individual_level=True):
 
     append_relative_err(result)
 
-    return result
+    print(simu_setting_2_str(p, mode))
+    print("========")
+    return result, simu_setting_2_str(p, mode)
 
 
 
-def simu_setting_2_str(p, mode):
-    return str(mode)+'_'+str(p)
-
-
-
-
-def simu(num_obs, generating_mode, individual_level=True):
+def series_simu(num_obs, generating_mode, individual_level=True):
+    print(type(generating_mode))
     res_file_name = generating_mode+'_'+'result_'+str(num_obs)
     result = {}
     for p in p_values:
         for mode in ['ho', 'he']:
-            key_name = simu_setting_2_str(p, mode)
-            print(key_name)
-            sub_res = simu_help(mode, num_obs = num_obs, p=p, generating_mode = generating_mode, individual_level=individual_level)
+            sub_res, key_name = simu_help(mode, num_obs = num_obs, p=p, generating_mode = generating_mode, individual_level=individual_level)
             result[key_name] = sub_res
     with open(os.path.join(RES_DIR, res_file_name), 'wb') as f:
         pickle.dump(result, f)
     return result
 
+
+def parallel_simu(num_obs, generating_mode, individual_level=True):
+
+
+    res_file_name = generating_mode+'_'+'result_'+str(num_obs)
+    num_obs = [num_obs for _ in range(6)]
+    '''
+    p_values1 = [p_values for _ in range(2)]
+    p_values1 = list(chain(*p_values1))
+    modes = [['ho', 'he'] for _ in range(3)]
+    modes = list(chain(*modes))
+    generating_modes = [generating_mode for _ in range(6)]
+    '''
+    arguments = list(zip(cycle(['ho', 'he']), num_obs, cycle(p_values), cycle([generating_mode]), cycle([individual_level])))
+    print(arguments)
+    p = Pool()
+    res = p.starmap(simu_help, arguments)
+    result = {}
+    for item in res:
+        result[item[1]] = item[0]
+
+    with open(os.path.join(RES_DIR, res_file_name), 'wb') as f:
+        pickle.dump(result, f)
+    return result
 
 
 
@@ -202,14 +251,36 @@ def extract_tuple(errs_dict):
 
 
 
+def main(series=False):
+    if series:
+        series_simu(200, generating_mode='ma', individual_level=True)
+        series_simu(200, generating_mode='var', individual_level=True)
+        #series_simu(400, generating_mode = 'ma', individual_level=True)
+        #series_simu(400, generating_mode='var', individual_level=True)
+        #series_simu(600, generating_mode='ma', individual_level=True)
+        #series_simu(600, generating_mode='var', individual_level=True)
+    else:
+        p_simu = MyPool()
+        p_simu.starmap(parallel_simu, [[200,'ma'], [200,'var']])
+        #parallel_simu(200, 'ma', True)
+
+
+
+
 
 if __name__ == "__main__":
-    random.seed(1)
-    simu(200, generating_mode='ma', individual_level=True)
-    simu(200, generating_mode='var', individual_level=True)
-    simu(400, generating_mode = 'ma', individual_level=True)
-    simu(400, generating_mode='var', individual_level=True)
-    simu(600, generating_mode='ma', individual_level=True)
-    simu(600, generating_mode='var', individual_level=True)
+
+
+    start_time = time.time()
+    main(series=False)
+    print("--- %s seconds ---" % (time.time() - start_time))
+
+
+    #simu(200, generating_mode='ma', individual_level=True)
+    #simu(200, generating_mode='var', individual_level=True)
+    #simu(400, generating_mode = 'ma', individual_level=True)
+    #simu(400, generating_mode='var', individual_level=True)
+    #simu(600, generating_mode='ma', individual_level=True)
+    #simu(600, generating_mode='var', individual_level=True)
 
     #simu_ma_help(mode = 'ho', num_obs = 600, p=48, graphics=True)

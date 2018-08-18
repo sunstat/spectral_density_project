@@ -135,36 +135,61 @@ def extract_array_result(result, model_type, p):
 
 
 def write_vma_rmise(file_handle, model_type='ho'):
-    result_file_name = 'ma_result_200'
-    result_200 = load_result(result_file_name)
-    result_file_name = 'ma_result_400'
-    result_400 = load_result(result_file_name)
-    result_file_name = 'ma_result_600'
-    result_600 = load_result(result_file_name)
+    try:
+        result_file_name = 'ma_result_200'
+        result_200 = load_result(result_file_name)
+    except:
+        result_200 = None
+
+    try:
+        result_file_name = 'ma_result_400'
+        result_400 = load_result(result_file_name)
+    except:
+        result_400 = None
+
+    try:
+        result_file_name = 'ma_result_600'
+        result_600 = load_result(result_file_name)
+    except:
+        result_600 = None
     file_handle.write('VMA & & & & &\\\\\n')
     for p in p_values:
         file_handle.write('p = {} & & & & &\\\\\n'.format(p))
         for n in n_values:
             result = eval('result_'+str(n))
-            file_handle.write('\\multicolumn{{1}}{{r}}{{n = {0}}}'.format(str(n)))
-            file_handle.write(extract_array_result(result, model_type, p)+'\\\\\n')
+            if result is not None:
+                file_handle.write('\\multicolumn{{1}}{{r}}{{n = {0}}}'.format(str(n)))
+                file_handle.write(extract_array_result(result, model_type, p)+'\\\\\n')
 
 
 
 def write_var_rmise(file_handle, model_type='ho'):
-    result_file_name = 'var_result_200'
-    result_200 = load_result(result_file_name)
-    result_file_name = 'var_result_400'
-    result_400 = load_result(result_file_name)
-    result_file_name = 'var_result_600'
-    result_600 = load_result(result_file_name)
+    try:
+        result_file_name = 'var_result_200'
+        result_200 = load_result(result_file_name)
+    except:
+        result_200 = None
+
+    try:
+        result_file_name = 'var_result_400'
+        result_400 = load_result(result_file_name)
+    except:
+        result_400 = None
+
+    try:
+        result_file_name = 'var_result_600'
+        result_600 = load_result(result_file_name)
+    except:
+        result_600 = None
+
     file_handle.write('VAR & & & & &\\\\\n')
     for p in p_values:
         file_handle.write('p = {} & & & & &\\\\\n'.format(p))
         for n in n_values:
             result = eval('result_' + str(n))
-            file_handle.write('\\multicolumn{{1}}{{r}}{{n = {0}}}'.format(str(n)))
-            file_handle.write(extract_array_result(result, model_type, p) + '\\\\\n')
+            if result is not None:
+                file_handle.write('\\multicolumn{{1}}{{r}}{{n = {0}}}'.format(str(n)))
+                file_handle.write(extract_array_result(result, model_type, p) + '\\\\\n')
 
 
 def write_rmise_table(model_type='ho'):
@@ -189,52 +214,62 @@ def extract_three_metric_array(result, model_type, p):
 
 
 def write_vma_three_metrics(file_handle, model_type='ho'):
-    result_file_name = 'ma_result_200'
-    result_200 = load_result(result_file_name)
-    result_file_name = 'ma_result_400'
-    result_400 = load_result(result_file_name)
-    result_file_name = 'ma_result_600'
-    result_600 = load_result(result_file_name)
+    try:
+        result_file_name = 'ma_result_200'
+        result_200 = load_result(result_file_name)
+    except:
+        result_200 = None
+
+    try:
+        result_file_name = 'ma_result_400'
+        result_400 = load_result(result_file_name)
+    except:
+        result_400 = None
+
+    try:
+        result_file_name = 'ma_result_600'
+        result_600 = load_result(result_file_name)
+    except:
+        result_600 = None
     file_handle.write('VMA & precision & recall & F1 & precision & recall & F1 & precision & recall & F1\\\\\n')
     for p in p_values:
         file_handle.write(' p = {} & & & & & & & & & \\\\\n'.format(str(p)))
         for n in n_values:
             result = eval('result_' + str(n))
-            file_handle.write('\\multicolumn{{1}}{{r}}{{n = {0}}}'.format(str(n)))
-            file_handle.write(extract_three_metric_array(result, model_type, p)+'\\\\\n')
+            if result is not None:
+                file_handle.write('\\multicolumn{{1}}{{r}}{{n = {0}}}'.format(str(n)))
+                file_handle.write(extract_three_metric_array(result, model_type, p)+'\\\\\n')
 
 
-
-def write_vma_three_metrics(file_handle, model_type='ho'):
-    result_file_name = 'ma_result_200'
-    result_200 = load_result(result_file_name)
-    result_file_name = 'ma_result_400'
-    result_400 = load_result(result_file_name)
-    result_file_name = 'ma_result_600'
-    result_600 = load_result(result_file_name)
-    file_handle.write('VMA & precision & recall & F1 & precision & recall & F1 & precision & recall & F1\\\\\n')
-    for p in p_values:
-        file_handle.write(' p = {} & & & & & & & & & \\\\\n'.format(str(p)))
-        for n in n_values:
-            result = eval('result_' + str(n))
-            file_handle.write('\\multicolumn{{1}}{{r}}{{n = {0}}}'.format(str(n)))
-            file_handle.write(extract_three_metric_array(result, model_type, p)+'\\\\\n')
 
 
 def write_var_three_metrics(file_handle, model_type='ho'):
-    result_file_name = 'var_result_200'
-    result_200 = load_result(result_file_name)
-    result_file_name = 'var_result_400'
-    result_400 = load_result(result_file_name)
-    result_file_name = 'var_result_600'
-    result_600 = load_result(result_file_name)
+    try:
+        result_file_name = 'var_result_200'
+        result_200 = load_result(result_file_name)
+    except:
+        result_200 = None
+
+    try:
+        result_file_name = 'var_result_400'
+        result_400 = load_result(result_file_name)
+    except:
+        result_400 = None
+
+    try:
+        result_file_name = 'var_result_600'
+        result_600 = load_result(result_file_name)
+    except:
+        result_600 = None
+
     file_handle.write('VAR & precision & recall & F1 & precision & recall & F1 & precision & recall & F1\\\\\n')
     for p in p_values:
         file_handle.write(' p = {} & & & & & & & & & \\\\\n'.format(str(p)))
         for n in n_values:
             result = eval('result_' + str(n))
-            file_handle.write('\\multicolumn{{1}}{{r}}{{n = {0}}}'.format(str(n)))
-            file_handle.write(extract_three_metric_array(result, model_type, p)+'\\\\\n')
+            if result is not None:
+                file_handle.write('\\multicolumn{{1}}{{r}}{{n = {0}}}'.format(str(n)))
+                file_handle.write(extract_three_metric_array(result, model_type, p)+'\\\\\n')
 
 
 def write_three_metric_table(model_type = 'ho'):

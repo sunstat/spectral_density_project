@@ -49,7 +49,7 @@ def generate_weights_homo(p, gen_mode):
     if gen_mode == 'ma':
         block = generate_upper_block(6, 0.4, -0.5)
     elif gen_mode == 'var':
-        block = generate_upper_block(6, 0.2, 0.1)
+        block = generate_upper_block(6, 0.2, -0.3)
     if p == 12:
         ls = [block, block]
         return block_diag(*ls)
