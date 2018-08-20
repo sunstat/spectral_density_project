@@ -309,7 +309,7 @@ def parallel_simu(num_obs, generating_mode, individual_level=True):
     '''
     arguments = list(zip(cycle(['ho', 'he']), num_obs, cycle(p_values), cycle([generating_mode]), cycle([individual_level])))
     print(arguments)
-    p = MyPool(4)
+    p = MyPool(10)
     res = p.starmap(parallel_simu_help, arguments)
     result = {}
     for item in res:
@@ -369,7 +369,7 @@ if __name__ == "__main__":
     #test_parallel_simu_help()
 
     start_time = time.time()
-    main(series=True)
+    main(series=False)
     print("--- %s seconds ---" % (time.time() - start_time))
     '''
 
