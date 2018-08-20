@@ -232,7 +232,7 @@ def evaluate_iteration(num_obs, model_info, individual_level = True):
 
 
 
-def parallel_simu_help(mode, num_obs, p, generating_mode, individual_level=True, num_iterations=5):
+def parallel_simu_help(mode, num_obs, p, generating_mode, individual_level=True, num_iterations=10):
     assert generating_mode in ['ma', 'var']
     print("now doing simulation with setting p = {}, mode = {}".format(p, mode))
     print("================")
@@ -369,7 +369,7 @@ if __name__ == "__main__":
     #test_parallel_simu_help()
 
     start_time = time.time()
-    main(series=False)
+    main(series=True)
     print("--- %s seconds ---" % (time.time() - start_time))
     '''
 
