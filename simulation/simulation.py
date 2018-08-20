@@ -206,6 +206,10 @@ def evaluate_iteration(num_obs, model_info, individual_level = True):
     elif generating_mode == 'var':
         ts = generate_mvar(weights, num_obs=num_obs, stdev=stdev)
     spec_est = SpecEst(ts, model_info, individual_level=individual_level)
+    true_spectral_norm_square = {}
+    true_spectral = spec_est.return_all_true_spectral()
+    for key in true_spectral:
+        true_spectral_norm_square[key] = HS_norm(true_spectral[key]) ** 2
 
     res = []
 
@@ -220,6 +224,8 @@ def evaluate_iteration(num_obs, model_info, individual_level = True):
     for mode_threshold in ['th', 'so', 'al']:
         precision, recall, F1 = spec_est.query_recover_three_measures(mode_threshold)
         res += [precision]+[recall]+[F1]
+
+    res+=[true_spectral_norm_square]
 
     return res
 
@@ -241,15 +247,10 @@ def parallel_simu_help(mode, num_obs, p, generating_mode, individual_level=True,
     model_info['stdev'] = stdev
 
 
-    true_spectral_norm_square = {}
     if generating_mode == 'ma':
         ts = generate_ma(weights, num_obs=num_obs, stdev=stdev)
     elif generating_mode == 'var':
         ts = generate_mvar(weights, num_obs=num_obs, stdev=stdev)
-    spec_est = SpecEst(ts, model_info, individual_level=individual_level)
-    true_spectral = spec_est.return_all_true_spectral()
-    for key in true_spectral:
-        true_spectral_norm_square[key] = HS_norm(true_spectral[key]) ** 2
 
     arguments = list(zip(cycle([num_obs]),  [model_info for _ in range(num_iterations)]))
     #print(arguments)
@@ -260,9 +261,11 @@ def parallel_simu_help(mode, num_obs, p, generating_mode, individual_level=True,
     res = iteration_pool.starmap(evaluate_iteration, arguments)
 
     errs_dict_al,  errs_dict_th, errs_dict_so, errs_dict_sh, errs_dict_sm , precision_th, recall_th, F1_th, \
-        precision_so, recall_so, F1_so, precision_al, recall_al, F1_al = list(zip(*res))
+        precision_so, recall_so, F1_so, precision_al, recall_al, F1_al, true_spectral_norm_square = list(zip(*res))
 
+    true_spectral_norm_square = true_spectral_norm_square[0]
     result = {}
+
 
     result['raw_error'] = {'al': errs_dict_al, 'th': errs_dict_th, 'so':errs_dict_so,
                        'sh': errs_dict_sh, 'sm': errs_dict_sm, 'true': true_spectral_norm_square}
@@ -307,7 +310,7 @@ def parallel_simu(num_obs, generating_mode, individual_level=True):
     arguments = list(zip(cycle(['ho', 'he']), num_obs, cycle(p_values), cycle([generating_mode]), cycle([individual_level])))
     print(arguments)
     p = MyPool(4)
-    res = p.starmap(simu_help, arguments)
+    res = p.starmap(parallel_simu_help, arguments)
     result = {}
     for item in res:
         result[item[1]] = item[0]
