@@ -110,7 +110,7 @@ def simu_setting_2_str(p, generating_mode):
 
 
 
-def simu_help(mode, num_obs, p, generating_mode, individual_level=True):
+def simu_help(mode, num_obs, p, generating_mode, individual_level=True, num_iterations=5):
     assert generating_mode in ['ma', 'var']
     print("now doing simulation with setting p = {}, mode = {}".format(p, mode))
     print("================")
@@ -144,7 +144,7 @@ def simu_help(mode, num_obs, p, generating_mode, individual_level=True):
     true_spectral_norm_square = {}
 
 
-    for i in range(3):
+    for i in range(num_iterations):
         if generating_mode == 'ma':
             ts = generate_ma(weights, num_obs=num_obs, stdev=stdev)
         elif generating_mode == 'var':
@@ -189,8 +189,92 @@ def simu_help(mode, num_obs, p, generating_mode, individual_level=True):
 
     append_relative_err(result)
 
-    print(simu_setting_2_str(p, mode))
-    print("========")
+
+    return result, simu_setting_2_str(p, mode)
+
+
+
+def evaluate_iteration(num_obs, model_info, individual_level = True):
+    generating_mode = model_info['model']
+    weights = model_info['weights']
+    span = model_info['span']
+    stdev = model_info['stdev']
+
+
+    if generating_mode == 'ma':
+        ts = generate_ma(weights, num_obs=num_obs, stdev=stdev)
+    elif generating_mode == 'var':
+        ts = generate_mvar(weights, num_obs=num_obs, stdev=stdev)
+    spec_est = SpecEst(ts, model_info, individual_level=individual_level)
+
+    res = []
+
+    err_al_dict = spec_est.evaluate('al')
+    err_th_dict = spec_est.evaluate('th')
+    err_so_dict = spec_est.evaluate('so')
+    err_sh_dict = spec_est.evaluate('sh')
+    err_sm_dict = spec_est.evaluate('sm')
+
+    res += [err_al_dict]+[err_th_dict]+[err_so_dict]+[err_sh_dict]+[err_sm_dict]
+
+    for mode_threshold in ['th', 'so', 'al']:
+        precision, recall, F1 = spec_est.query_recover_three_measures(mode_threshold)
+        res += [precision]+[recall]+[F1]
+
+    return res
+
+
+
+
+def parallel_simu_help(mode, num_obs, p, generating_mode, individual_level=True, num_iterations=5):
+    assert generating_mode in ['ma', 'var']
+    print("now doing simulation with setting p = {}, mode = {}".format(p, mode))
+    print("================")
+    weights = fetch_weights(p, mode, generating_mode)
+    stdev = 1
+    span = fetch_span(num_obs)
+
+    model_info = {}
+    model_info['model'] = generating_mode
+    model_info['weights'] = weights
+    model_info['span'] = span
+    model_info['stdev'] = stdev
+
+
+    true_spectral_norm_square = {}
+    if generating_mode == 'ma':
+        ts = generate_ma(weights, num_obs=num_obs, stdev=stdev)
+    elif generating_mode == 'var':
+        ts = generate_mvar(weights, num_obs=num_obs, stdev=stdev)
+    spec_est = SpecEst(ts, model_info, individual_level=individual_level)
+    true_spectral = spec_est.return_all_true_spectral()
+    for key in true_spectral:
+        true_spectral_norm_square[key] = HS_norm(true_spectral[key]) ** 2
+
+    arguments = list(zip(cycle([num_obs]),  [model_info for _ in range(num_iterations)]))
+    #print(arguments)
+
+
+    iteration_pool = Pool(10)
+
+    res = iteration_pool.starmap(evaluate_iteration, arguments)
+
+    errs_dict_al,  errs_dict_th, errs_dict_so, errs_dict_sh, errs_dict_sm , precision_th, recall_th, F1_th, \
+        precision_so, recall_so, F1_so, precision_al, recall_al, F1_al = list(zip(*res))
+
+    result = {}
+
+    result['raw_error'] = {'al': errs_dict_al, 'th': errs_dict_th, 'so':errs_dict_so,
+                       'sh': errs_dict_sh, 'sm': errs_dict_sm, 'true': true_spectral_norm_square}
+    result['precision'] = {'so': (np.mean(precision_so), np.std(precision_so)), 'al': (np.mean(precision_al), np.std(precision_al))
+        , 'th': (np.mean(precision_al), np.std(precision_al))}
+    result['recall'] = {'so': (np.mean(recall_so), np.std(recall_so)), 'al': (np.mean(recall_al), np.std(recall_al))
+        , 'th': (np.mean(recall_th), np.std(recall_th))}
+    result['F1'] = {'so': (np.mean(F1_so), np.std(F1_so)), 'al': (np.mean(F1_al), np.std(F1_al)), 'th': (np.mean(F1_th), np.std(F1_th))}
+
+    append_relative_err(result)
+
+
     return result, simu_setting_2_str(p, mode)
 
 
@@ -201,7 +285,7 @@ def series_simu(num_obs, generating_mode, individual_level=True):
     result = {}
     for p in p_values:
         for mode in ['ho', 'he']:
-            sub_res, key_name = simu_help(mode, num_obs = num_obs, p=p, generating_mode = generating_mode, individual_level=individual_level)
+            sub_res, key_name = parallel_simu_help(mode, num_obs = num_obs, p=p, generating_mode = generating_mode, individual_level=individual_level)
             result[key_name] = sub_res
     with open(os.path.join(RES_DIR, res_file_name), 'wb') as f:
         pickle.dump(result, f)
@@ -222,7 +306,7 @@ def parallel_simu(num_obs, generating_mode, individual_level=True):
     '''
     arguments = list(zip(cycle(['ho', 'he']), num_obs, cycle(p_values), cycle([generating_mode]), cycle([individual_level])))
     print(arguments)
-    p = Pool()
+    p = MyPool(4)
     res = p.starmap(simu_help, arguments)
     result = {}
     for item in res:
@@ -254,7 +338,7 @@ def extract_tuple(errs_dict):
 def main(series=False):
     if series:
         series_simu(200, generating_mode='ma', individual_level=True)
-        series_simu(200, generating_mode='var', individual_level=True)
+        #series_simu(200, generating_mode='var', individual_level=True)
         #series_simu(400, generating_mode = 'ma', individual_level=True)
         #series_simu(400, generating_mode='var', individual_level=True)
         #series_simu(600, generating_mode='ma', individual_level=True)
@@ -268,14 +352,23 @@ def main(series=False):
 
 
 
+def test_evaluate_iteration():
+    pass
+
+
+def test_parallel_simu_help():
+    mode = 'ho'; num_obs=200; p=12; generating_mode='ma'; individual_level = True; num_iterations = 3
+    parallel_simu_help(mode, num_obs, p, generating_mode)
+
+
 
 if __name__ == "__main__":
-
+    #test_parallel_simu_help()
 
     start_time = time.time()
-    main(series=False)
+    main(series=True)
     print("--- %s seconds ---" % (time.time() - start_time))
-
+    '''
 
     #simu(200, generating_mode='ma', individual_level=True)
     #simu(200, generating_mode='var', individual_level=True)
@@ -285,3 +378,4 @@ if __name__ == "__main__":
     #simu(600, generating_mode='var', individual_level=True)
 
     #simu_ma_help(mode = 'ho', num_obs = 600, p=48, graphics=True)
+    '''
