@@ -15,9 +15,10 @@ import numpy as np
 from generate_weights import *
 from spectral_density import *
 import matplotlib.pyplot as plt
+import os
 
 dashList = [(5,2),(2,5),(4,10),(3,3,2,2),(5,2,20,2)]
-p_values = [12,48,96]
+p_values = [12,48]
 
 
 def plot_err_curve(ax, errs_sm_dict, errs_sh_dict, errs_th_dict,
@@ -146,8 +147,10 @@ def display_results(num_obs, model_mode):
 
 
 if __name__ == "__main__":
+    display_results(num_obs=100, model_mode='ma')
+    display_results(num_obs=100, model_mode='var')
     display_results(num_obs=200, model_mode='ma')
-    display_results(num_obs = 200, model_mode = 'var')
+    display_results(num_obs=200, model_mode = 'var')
     display_results(num_obs=400, model_mode='ma')
     display_results(num_obs=400, model_mode='var')
     display_results(num_obs=600, model_mode='ma')

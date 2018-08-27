@@ -48,6 +48,8 @@ def fetch_span(num_obs):
         return 20
     elif num_obs == 200:
         return 15
+    elif num_obs == 100:
+        return 10
 
 def extract_tuple1(errs_dict):
     ls = sorted(errs_dict.items())
@@ -231,8 +233,7 @@ def evaluate_iteration(num_obs, model_info, individual_level = True):
 
 
 
-
-def parallel_simu_help(mode, num_obs, p, generating_mode, individual_level=True, num_iterations=10):
+def parallel_simu_help(mode, num_obs, p, generating_mode, individual_level=True, num_iterations=5, noise_type='G'):
     assert generating_mode in ['ma', 'var']
     print("now doing simulation with setting p = {}, mode = {}".format(p, mode))
     print("================")
@@ -248,9 +249,9 @@ def parallel_simu_help(mode, num_obs, p, generating_mode, individual_level=True,
 
 
     if generating_mode == 'ma':
-        ts = generate_ma(weights, num_obs=num_obs, stdev=stdev)
+        ts = generate_ma(weights, num_obs=num_obs, stdev=stdev, noise_type=noise_type)
     elif generating_mode == 'var':
-        ts = generate_mvar(weights, num_obs=num_obs, stdev=stdev)
+        ts = generate_mvar(weights, num_obs=num_obs, stdev=stdev, noise_type=noise_type)
 
     arguments = list(zip(cycle([num_obs]),  [model_info for _ in range(num_iterations)]))
     #print(arguments)
@@ -282,7 +283,7 @@ def parallel_simu_help(mode, num_obs, p, generating_mode, individual_level=True,
 
 
 
-def series_simu(num_obs, generating_mode, individual_level=True):
+def series_simu(num_obs, generating_mode, individual_level=True, noise_type='G'):
     print(type(generating_mode))
     res_file_name = generating_mode+'_'+'result_'+str(num_obs)
     result = {}
@@ -296,7 +297,6 @@ def series_simu(num_obs, generating_mode, individual_level=True):
 
 
 def parallel_simu(num_obs, generating_mode, individual_level=True):
-
 
     res_file_name = generating_mode+'_'+'result_'+str(num_obs)
     num_obs = [num_obs for _ in range(6)]
@@ -340,12 +340,14 @@ def extract_tuple(errs_dict):
 
 def main(series=False):
     if series:
+        series_simu(100, generating_mode='ma', individual_level=True)
+        series_simu(100, generating_mode='var', individual_level=True)
         series_simu(200, generating_mode='ma', individual_level=True)
-        #series_simu(200, generating_mode='var', individual_level=True)
-        #series_simu(400, generating_mode = 'ma', individual_level=True)
-        #series_simu(400, generating_mode='var', individual_level=True)
-        #series_simu(600, generating_mode='ma', individual_level=True)
-        #series_simu(600, generating_mode='var', individual_level=True)
+        series_simu(200, generating_mode='var', individual_level=True)
+        series_simu(400, generating_mode = 'ma', individual_level=True)
+        series_simu(400, generating_mode='var', individual_level=True)
+        series_simu(600, generating_mode='ma', individual_level=True)
+        series_simu(600, generating_mode='var', individual_level=True)
     else:
         #p_simu = MyPool()
         #p_simu.starmap(parallel_simu, [[200,'ma'], [200,'var']])
@@ -360,7 +362,7 @@ def test_evaluate_iteration():
 
 
 def test_parallel_simu_help():
-    mode = 'ho'; num_obs=200; p=12; generating_mode='ma'; individual_level = True; num_iterations = 3
+    mode = 'ho'; num_obs=200; p=12; generating_mode='ma'; individual_level = False; num_iterations = 3
     parallel_simu_help(mode, num_obs, p, generating_mode)
 
 

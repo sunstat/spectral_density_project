@@ -2,6 +2,7 @@ import numpy as np
 from scipy.linalg import block_diag
 from spectral_density import *
 
+p_values = [12,48,96]
 
 def generate_upper_block(p, diag_val, off_set = 0.2):
     if p == 1:
@@ -19,6 +20,7 @@ def generate_upper_block_full(p, diag_val, off_value):
             if i != j:
                 block[i, j] = off_value
     return block
+
 
 def generate_lower_block(p, diag_val):
     if p == 1:
@@ -47,11 +49,11 @@ def generate_block_diagnal(p, diag_val):
 def generate_weights_homo(p, gen_mode):
     assert p in [12, 48, 96]
     if gen_mode == 'ma':
-        block = generate_upper_block(6, 0.4, -0.5)
+        block = generate_upper_block(3, 0.5, -0.4)
     elif gen_mode == 'var':
-        block = generate_upper_block(6, 0.2, -0.3)
+        block = generate_upper_block(3, 0.5, -0.4)
     if p == 12:
-        ls = [block, block]
+        ls = [block, block, block, block]
         return block_diag(*ls)
     if p == 48:
         ls = []
@@ -62,15 +64,13 @@ def generate_weights_homo(p, gen_mode):
         return block_diag(generate_weights_homo(48, gen_mode), generate_weights_homo(48, gen_mode))
 
 
+
+
 def generate_weights_heter(p, gen_mode):
-    if gen_mode == 'ma':
-        block1 = generate_block_diagnal(int(2*p/3), 0.4)
-        block2 = generate_upper_block(int(p/3), 0.4, -0.5)
-    elif gen_mode == 'var':
-        block1 = generate_upper_block(int(2 * p / 3), 0.1, 0.1)
-        block2 = generate_upper_block(int(p / 3), 0.1, -0.4)
-    ls = [block1, block2]
-    return block_diag(*ls)
+    block1 = generate_upper_block(p//3, 0.1, 0.1)
+    block2 = generate_upper_block(2*p//3, 0.1, -0.4)
+    blocks = [block1, block2]
+    return block_diag(*blocks)
 
 
 def fetch_weights(p, mode, gen_mode):

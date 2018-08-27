@@ -5,8 +5,8 @@ from subprocess import call
 RES_DIR='./result'
 TABLE_DIR='table'
 
-p_values=  [12,48,96]
-n_values = [200, 400, 600]
+p_values=  [12,48]
+n_values = [100, 200, 400, 600]
 
 '''
 \begin{table}[p]
@@ -135,6 +135,13 @@ def extract_array_result(result, model_type, p):
 
 
 def write_vma_rmise(file_handle, model_type='ho'):
+
+    try:
+        result_file_name = 'ma_result_100'
+        result_100 = load_result(result_file_name)
+    except:
+        result_100 = None
+
     try:
         result_file_name = 'ma_result_200'
         result_200 = load_result(result_file_name)
@@ -164,6 +171,14 @@ def write_vma_rmise(file_handle, model_type='ho'):
 
 
 def write_var_rmise(file_handle, model_type='ho'):
+
+    try:
+        result_file_name = 'var_result_100'
+        result_100 = load_result(result_file_name)
+    except:
+        result_100 = None
+
+
     try:
         result_file_name = 'var_result_200'
         result_200 = load_result(result_file_name)
@@ -215,6 +230,12 @@ def extract_three_metric_array(result, model_type, p):
 
 def write_vma_three_metrics(file_handle, model_type='ho'):
     try:
+        result_file_name = 'ma_result_100'
+        result_100 = load_result(result_file_name)
+    except:
+        result_100 = None
+
+    try:
         result_file_name = 'ma_result_200'
         result_200 = load_result(result_file_name)
     except:
@@ -244,6 +265,14 @@ def write_vma_three_metrics(file_handle, model_type='ho'):
 
 
 def write_var_three_metrics(file_handle, model_type='ho'):
+
+    try:
+        result_file_name = 'var_result_100'
+        result_100 = load_result(result_file_name)
+    except:
+        result_100 = None
+
+
     try:
         result_file_name = 'var_result_200'
         result_200 = load_result(result_file_name)
