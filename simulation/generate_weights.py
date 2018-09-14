@@ -2,7 +2,7 @@ import numpy as np
 from scipy.linalg import block_diag
 from spectral_density import *
 
-p_values = [12,48,96]
+p_values = [12,24,48,96]
 
 def generate_upper_block(p, diag_val, off_set = 0.2):
     if p == 1:
@@ -47,13 +47,18 @@ def generate_block_diagnal(p, diag_val):
 
 
 def generate_weights_homo(p, gen_mode):
-    assert p in [12, 48, 96]
+    assert p in [12, 24, 48, 96]
     if gen_mode == 'ma':
         block = generate_upper_block(3, 0.5, -0.4)
     elif gen_mode == 'var':
         block = generate_upper_block(3, 0.5, -0.4)
     if p == 12:
         ls = [block, block, block, block]
+        return block_diag(*ls)
+    if p == 24:
+        ls = []
+        for _ in range(2):
+            ls.append(generate_weights_homo(12, gen_mode))
         return block_diag(*ls)
     if p == 48:
         ls = []

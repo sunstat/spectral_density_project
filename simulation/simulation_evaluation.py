@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import os
 
 dashList = [(5,2),(2,5),(4,10),(3,3,2,2),(5,2,20,2)]
-p_values = [12,48]
+p_values = [12,24,48,96]
 
 
 def plot_err_curve(ax, errs_sm_dict, errs_sh_dict, errs_th_dict,

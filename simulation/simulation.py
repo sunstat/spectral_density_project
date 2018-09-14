@@ -21,7 +21,7 @@ RES_DIR = 'result'
 simu_log_file = 'simu_res.log'
 
 
-p_values = [12,48,96]
+p_values = [12, 24, 48, 96]
 
 
 class NoDaemonProcess(multiprocessing.Process):
@@ -39,17 +39,30 @@ class MyPool(multiprocessing.pool.Pool):
 
 
 
-def fetch_span(num_obs):
-    if num_obs == 800:
-        return 30
-    elif num_obs == 600:
-        return 24
-    elif num_obs == 400:
-        return 20
-    elif num_obs == 200:
-        return 15
-    elif num_obs == 100:
-        return 10
+def fetch_span(num_obs, gen_model):
+    if gen_model == 'ma':
+        if num_obs == 800:
+            return int(np.sqrt(num_obs))
+        elif num_obs == 600:
+            return int(np.sqrt(num_obs))
+        elif num_obs == 400:
+            return int(np.sqrt(num_obs))
+        elif num_obs == 200:
+            return int(np.sqrt(num_obs))
+        elif num_obs == 100:
+            return int(np.sqrt(num_obs))
+    elif gen_model == 'var':
+        if num_obs == 800:
+            return int(np.sqrt(num_obs))//3*2
+        elif num_obs == 600:
+            return int(np.sqrt(num_obs))//3*2
+        elif num_obs == 400:
+            return int(np.sqrt(num_obs))//3*2
+        elif num_obs == 200:
+            return int(np.sqrt(num_obs))//3*2
+        elif num_obs == 100:
+            return int(np.sqrt(num_obs))//3*2
+
 
 def extract_tuple1(errs_dict):
     ls = sorted(errs_dict.items())
@@ -112,13 +125,14 @@ def simu_setting_2_str(p, generating_mode):
 
 
 
-def simu_help(mode, num_obs, p, generating_mode, individual_level=True, num_iterations=5):
+
+def simu_help(mode, num_obs, p, generating_mode, individual_level=True, num_iterations=50):
     assert generating_mode in ['ma', 'var']
     print("now doing simulation with setting p = {}, mode = {}".format(p, mode))
     print("================")
     weights = fetch_weights(p, mode, generating_mode)
     stdev = 1
-    span = fetch_span(num_obs)
+    span = fetch_span(num_obs, generating_mode)
 
     model_info = {}
     model_info['model'] = generating_mode
@@ -197,6 +211,7 @@ def simu_help(mode, num_obs, p, generating_mode, individual_level=True, num_iter
 
 
 def evaluate_iteration(num_obs, model_info, individual_level = True):
+    np.random.seed()
     generating_mode = model_info['model']
     weights = model_info['weights']
     span = model_info['span']
@@ -233,13 +248,13 @@ def evaluate_iteration(num_obs, model_info, individual_level = True):
 
 
 
-def parallel_simu_help(mode, num_obs, p, generating_mode, individual_level=True, num_iterations=5, noise_type='G'):
+def parallel_simu_help(mode, num_obs, p, generating_mode, individual_level=True, num_iterations=50, noise_type='G'):
     assert generating_mode in ['ma', 'var']
     print("now doing simulation with setting p = {}, mode = {}".format(p, mode))
     print("================")
     weights = fetch_weights(p, mode, generating_mode)
     stdev = 1
-    span = fetch_span(num_obs)
+    span = fetch_span(num_obs, generating_mode)
 
     model_info = {}
     model_info['model'] = generating_mode
@@ -288,8 +303,10 @@ def series_simu(num_obs, generating_mode, individual_level=True, noise_type='G')
     res_file_name = generating_mode+'_'+'result_'+str(num_obs)
     result = {}
     for p in p_values:
-        for mode in ['ho', 'he']:
-            sub_res, key_name = parallel_simu_help(mode, num_obs = num_obs, p=p, generating_mode = generating_mode, individual_level=individual_level)
+        for mode in ['ho']:
+            sub_res, key_name = parallel_simu_help(mode, num_obs = num_obs, p=p,
+                    generating_mode = generating_mode, individual_level=individual_level)
+            print(key_name)
             result[key_name] = sub_res
     with open(os.path.join(RES_DIR, res_file_name), 'wb') as f:
         pickle.dump(result, f)

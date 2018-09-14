@@ -5,7 +5,7 @@ from subprocess import call
 RES_DIR='./result'
 TABLE_DIR='table'
 
-p_values=  [12,48]
+p_values=  [12, 24,48, 96]
 n_values = [100, 200, 400, 600]
 
 '''
@@ -311,6 +311,6 @@ def write_three_metric_table(model_type = 'ho'):
 
 if __name__ == "__main__":
     write_rmise_table(model_type='ho')
-    write_rmise_table(model_type='he')
+    #write_rmise_table(model_type='he')
     write_three_metric_table(model_type='ho')
-    write_three_metric_table(model_type='he')
+    #write_three_metric_table(model_type='he')
